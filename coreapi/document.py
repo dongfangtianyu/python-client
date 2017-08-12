@@ -163,10 +163,13 @@ class Object(itypes.Dict):
 
     @property
     def links(self):
-        return OrderedDict([
-            (key, value) for key, value in self.items()
-            if isinstance(value, Link)
-        ])
+        data = []
+        for key, value in self.items():
+            if isinstance(value, Link):
+                data.append((key, value))
+            elif isinstance(value, self.__class__):
+                data.extend([(k, v) for k,v in value.links.items()])
+        return OrderedDict(data)
 
 
 class Array(itypes.List):
